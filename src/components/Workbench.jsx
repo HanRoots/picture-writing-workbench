@@ -6,6 +6,8 @@ import ResultPanel from './ResultPanel.jsx';
 import { gradeWriting } from '../lib/api.js';
 import { inferSecondGradeLevel, statusLabel } from '../lib/defaults.js';
 
+const OCR_COPY_PROMPT = '请识别孩子手写的作文，只输出识别出的原文。绝对不要添加、删减或修改任何内容，不要提供批改意见。请忽略红笔文字，并按不同同学分别整理输出。';
+
 export default function Workbench({ task, onChange, onBack, onSettings, notify }) {
   const [selectedId, setSelectedId] = useState(task.submissions?.[0]?.id || null);
   const [composerOpen, setComposerOpen] = useState(false);
@@ -89,16 +91,42 @@ export default function Workbench({ task, onChange, onBack, onSettings, notify }
     setSelectedId(remaining[0]?.id || null);
   }
 
+  async function copyOcrPrompt() {
+    try {
+      await navigator.clipboard.writeText(OCR_COPY_PROMPT);
+    } catch {
+      const copyField = document.createElement('textarea');
+      copyField.value = OCR_COPY_PROMPT;
+      copyField.setAttribute('readonly', '');
+      copyField.style.position = 'fixed';
+      copyField.style.opacity = '0';
+      document.body.appendChild(copyField);
+      copyField.select();
+      const copied = document.execCommand('copy');
+      copyField.remove();
+      if (!copied) {
+        notify('复制失败', '请选中提示语后手动复制。', 'error');
+        return;
+      }
+    }
+    notify('提示语已复制', '可以直接粘贴到其他文字识别工具中。');
+  }
+
   return (
     <div className="workbench-page">
       <header className="topbar workbench-topbar">
-        <button className="text-button back-button" onClick={onBack}><Icon name="arrowLeft" size={18} /> 全部任务</button>
+        <button className="text-button back-button" onClick={onBack} aria-label="全部任务"><Icon name="arrowLeft" size={18} /><span className="button-label">全部任务</span></button>
         <div className="workbench-title">
           <h1>{task.name}</h1>
           <span>{task.grade === 1 ? '一年级' : `二年级 · ${secondGradeLevelLabel}`} · {task.criteria.filter((item) => item.type === 'basic').length} 条基本要求</span>
         </div>
-        <button className="secondary-button small" onClick={onSettings}><Icon name="settings" size={17} /> 任务设置</button>
+        <button className="secondary-button small" onClick={onSettings} aria-label="任务设置"><Icon name="settings" size={17} /><span className="button-label">任务设置</span></button>
       </header>
+
+      <section className="ocr-copy-banner" aria-label="手写作文识别提示语">
+        <p>{OCR_COPY_PROMPT}</p>
+        <button className="ocr-copy-button" onClick={copyOcrPrompt}><Icon name="copy" size={16} /><span>复制提示语</span></button>
+      </section>
 
       <div className="mobile-work-tabs">
         <button className={mobileTab === 'source' ? 'active' : ''} onClick={() => setMobileTab('source')}>原文</button>
