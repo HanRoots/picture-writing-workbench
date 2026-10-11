@@ -1,0 +1,3 @@
+window.__PICTURE_WRITING_WORKBENCH_CONFIG__ = window.__PICTURE_WRITING_WORKBENCH_CONFIG__ || {
+  apiBaseUrl: '',
+};

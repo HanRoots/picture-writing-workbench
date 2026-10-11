@@ -1,0 +1,21 @@
+{
+  "name": "picture-writing-workbench",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "server": "node server/index.mjs",
+    "start:fc": "node server/index.mjs",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "package:fc": "node scripts/prepare-fc-package.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {}
+}
