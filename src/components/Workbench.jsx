@@ -125,7 +125,10 @@ export default function Workbench({ task, onChange, onBack, onSettings, notify }
 
       <section className="ocr-copy-banner" aria-label="手写作文识别提示语">
         <p>{OCR_COPY_PROMPT}</p>
-        <button className="ocr-copy-button" onClick={copyOcrPrompt}><Icon name="copy" size={16} /><span>复制提示语</span></button>
+        <div className="ocr-copy-actions">
+          <a className="ocr-kimi-link" href="https://www.kimi.com/" target="_blank" rel="noopener noreferrer" aria-label="Kimi 官网（在新标签页打开）">Kimi 官网</a>
+          <button className="ocr-copy-button" onClick={copyOcrPrompt}><Icon name="copy" size={16} /><span>复制提示语</span></button>
+        </div>
       </section>
 
       <div className="mobile-work-tabs">
